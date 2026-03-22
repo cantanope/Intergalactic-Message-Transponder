@@ -1,0 +1,11 @@
+services:
+  messages:
+    image: cantanope/messages:latest
+    continaer_name: messages_container
+    ports:
+      - "8003:80"
+    volumes:
+      - ./app:/app
+    restart: unless-stopped
+    networks:
+      - default
