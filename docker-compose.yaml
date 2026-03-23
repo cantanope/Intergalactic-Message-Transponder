@@ -1,7 +1,7 @@
 services:
   messages:
-    image: cantanope/messages:latest
-    continaer_name: messages_container
+    image: cantanope/message_machine:latest
+    container_name: message_machine_container
     ports:
       - "8003:80"
     volumes:
