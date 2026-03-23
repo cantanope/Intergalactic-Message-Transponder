@@ -45,7 +45,7 @@ def get_message(api_key: str = Security(verify_api_key)):
                     "status": "live"
                     }
     
-    messageFile = open("./app/messages.json", "r")
+    messageFile = open("./messages.json", "r")
     messages = json.load(messageFile)
     messageindex = random.randint(0, len(messages) - 1)
     return messages[messageindex]
