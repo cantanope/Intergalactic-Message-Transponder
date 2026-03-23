@@ -82,7 +82,7 @@ def push_message(line_one: str, line_two: str, api_key: str = Security(verify_ap
 
 @app.post("/v1/messages/{line_one}/{line_two}/{displayTimeSeconds}")
 def push_current_message(line_one: str, line_two: str, displayTimeSeconds: int, api_key: str = Security(verify_api_key)):
-    now = datetime.now()
+    now = datetime.now(timeZone)
     if len(line_one) > 16 or len(line_two) > 16:
         raise HTTPException(status_code=400, detail="Line one and line two must be less than 16 characters long")
     with open ("./livemessage.json", "w") as f:
