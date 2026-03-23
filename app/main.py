@@ -46,7 +46,7 @@ def get_message(api_key: str = Security(verify_api_key)):
     if liveMessage["currentTime"] != "None":
         now = datetime.now(timeZone)
         messageTime = datetime.strptime(liveMessage["currentTime"], "%Y-%m-%d %H:%M:%S")
-        timeDifference = (now.replace(tzinfo=None) - messageTime).total_seconds()
+        timeDifference = (now.replace(tzinfo=None) - messageTime.replace(tzinfo=None)).total_seconds()
         if timeDifference < int(liveMessage["displayTimeSeconds"]):
             return {"line_one": liveMessage["line_one"], 
                     "line_two": liveMessage["line_two"], 
@@ -82,7 +82,7 @@ def push_message(line_one: str, line_two: str, api_key: str = Security(verify_ap
 
 @app.post("/v1/messages/{line_one}/{line_two}/{displayTimeSeconds}")
 def push_current_message(line_one: str, line_two: str, displayTimeSeconds: int, api_key: str = Security(verify_api_key)):
-    now = datetime.now(timeZone)
+    now = datetime.now()
     if len(line_one) > 16 or len(line_two) > 16:
         raise HTTPException(status_code=400, detail="Line one and line two must be less than 16 characters long")
     with open ("./livemessage.json", "w") as f:
@@ -90,12 +90,12 @@ def push_current_message(line_one: str, line_two: str, displayTimeSeconds: int, 
             {"line_one": line_one, 
              "line_two": line_two, 
              "displayTimeSeconds": displayTimeSeconds, 
-             "currentTime": now.strftime("%Y-%m-%d %H:%M:%S")
+             "currentTime": now.replace(tzinfo=None).strftime("%Y-%m-%d %H:%M:%S")
             }, f, indent=2)
     return {"message": 
             {"line_one": line_one, 
              "line_two": line_two
             },
             "displayTimeSeconds": displayTimeSeconds,
-            "currentTime": now.strftime("%Y-%m-%d %H:%M:%S"),
+            "currentTime": now.replace(tzinfo=None).strftime("%Y-%m-%d %H:%M:%S"),
             "status": "success"}
